@@ -7,7 +7,11 @@
 [![Follow @twitter handle](https://img.shields.io/twitter/follow/Knockturn_io.svg?style=flat-square)](https://twitter.com/intent/follow?screen_name=ortis95)
 
 
-## DefiKingdoms contract
+Install with `pip install dfktools`
+
+https://pypi.org/project/dfktools/
+
+## DefiKingdoms toolbox
 
 This is a simple toolbox to interact with the contracts of [DefiKingdoms](https://defikingdoms.com/)
 
@@ -19,7 +23,6 @@ The use of any trade name or trademark is for identification and reference purpo
 
 **Like this project ? Consider supporting future developments by:**
 - Delegating AVAX to our Avalanche node **NodeID-4btZGj8TmrycK22kwgBK5wJEFighAFWiZ**
-- Delegating ADA to our [Cardano node [KTA]](https://pooltool.io/pool/991a64a6e3d866f4af4e0a2bfd61c15486a47ccc352e61e8a6b4fef8) **991a64a6e3d866f4af4e0a2bfd61c15486a47ccc352e61e8a6b4fef8**
 - Making a donation to **0xA68fBfa3E0c86D1f3fF071853df6DAe8753095E2**
 
 *Need help ? Join the [GameFi Developers Discord](https://discord.gg/JvfPpV7but)*
@@ -34,7 +37,7 @@ The use of any trade name or trademark is for identification and reference purpo
 7. All hardcoded addresses should be [CheckSummed](https://ethsum.netlify.app/)
 8. Use `logging`, not `print`
 9. No other third-party libraries (if really needed, please explain why in the PR)
-10. A short & meaningful comment is superior to a long & unfathomable documentation
+10. A short & meaningful comment is better than a long & unfathomable documentation
 
 <br/>
 

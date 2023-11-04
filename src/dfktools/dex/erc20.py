@@ -176,6 +176,8 @@ ITEMS_CRYSTALVALE = [
     ("0xC989c916F189D2A2BE0322c020942d7c43aEa830", "DFKLWITCR", "Lesser Wit Crystal"),
     ("0x3971212Ec22147EE8808cB84F743DD852Be92f9C", "DFKWITST", "Wit Stone"),
     ("0xFC943eBd19112D6c6098412238E4E8319641B3d8", "DFKLWITST", "Lesser Wit Stone"),
+    ("0xAcDa84fAb3d3cdB38078b04901a26c103C37E7F4", "DFKREGTRT", "Regular Pet Treat"),
+    ("0x8Df3fFa5a677ba9737CE8Afcb8dd15Bd74085adD", "DFKPRMTRT", "Premium Pet Treat")
 ]
 
 
@@ -188,6 +190,7 @@ ITEMS_SERENDALE2 = [
     ("0x75E8D8676d774C9429FbB148b30E304b5542aC3d", "DFKAMBRTFY", "Ambertaffy"),
     ("0xDbd4fA2D2C62C6c60957a126970e412Ed6AC1bD6", "DFKBLUESTEM", "Bluestem"),
     ("0xEDFBe9EEf42FfAf8909EC9Ce0d79850BA0C232FE", "DFKDRKWD", "Darkweed"),
+    ("0xeaF833A0Ae97897f6F69a728C9c17916296cecCA", "DFKGLDVN", "Goldvein"),
     ("0xBcdD90034eB73e7Aec2598ea9082d381a285f63b", "DFKIRONSCALE", "Ironscale"),
     ("0x80A42Dc2909C0873294c5E359e8DF49cf21c74E4", "DFKLANTERNEYE", "Lanterneye"),
     ("0xE408814828f2b51649473c1a05B861495516B920", "DFKMILKWEED", "Milkweed"),
@@ -261,7 +264,9 @@ ITEMS_SERENDALE2 = [
     ("0xf30214D43E55BE1cbaC712b49A75d4D3220302a7", "DFKWITCR", "Wit Crystal"),
     ("0xf15035b5eD13Feb18f63D829ABc1c3139041e7C2", "DFKLWITCR", "Lesser Wit Crystal"),
     ("0x3BaEFAfF21Fa2F06Ad3899903B7A899a91B5915A", "DFKWITST", "Wit Stone"),
-    ("0x5903F478e456DD4Ce5387caBE3984DfEf93D0A46", "DFKLWITST", "Lesser Wit Stone")
+    ("0x5903F478e456DD4Ce5387caBE3984DfEf93D0A46", "DFKLWITST", "Lesser Wit Stone"),
+    ("0x2F11e335224C5aBd3418B99922A9fe442F5696E9", "DFKREGTRT", "Regular Pet Treat"),
+    ("0xEec86C39e061B3Dec44f608Ff0ADA8053B8fFaDb", "DFKPRMTRT", "Premium Pet Treat")
 ]
 
 ABI = """
@@ -307,11 +312,11 @@ ABI = """
 
 
 def wei2eth(w3, wei):
-    return w3.fromWei(wei, 'ether')
+    return w3.from_wei(wei, 'ether')
 
 
 def eth2wei(w3, eth):
-    return w3.toWei(eth, 'ether')
+    return w3.to_wei(eth, 'ether')
 
 
 def block_explorer_link(token_address, txid):
@@ -378,7 +383,7 @@ def all_items(realm):
 def symbol(token_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
 
-    contract_address = Web3.toChecksumAddress(token_address)
+    contract_address = Web3.to_checksum_address(token_address)
     contract = w3.eth.contract(contract_address, abi=ABI)
 
     return contract.functions.symbol().call()
@@ -387,7 +392,7 @@ def symbol(token_address, rpc_address):
 def name(token_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
 
-    contract_address = Web3.toChecksumAddress(token_address)
+    contract_address = Web3.to_checksum_address(token_address)
     contract = w3.eth.contract(contract_address, abi=ABI)
 
     return contract.functions.name().call()
@@ -396,7 +401,7 @@ def name(token_address, rpc_address):
 def decimals(token_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
 
-    contract_address = Web3.toChecksumAddress(token_address)
+    contract_address = Web3.to_checksum_address(token_address)
     contract = w3.eth.contract(contract_address, abi=ABI)
 
     return contract.functions.decimals().call()
@@ -404,7 +409,7 @@ def decimals(token_address, rpc_address):
 
 def balance_of(address, token_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
-    contract_address = Web3.toChecksumAddress(token_address)
+    contract_address = Web3.to_checksum_address(token_address)
     contract = w3.eth.contract(contract_address, abi=ABI)
     result = contract.functions.balanceOf(address).call()
 
@@ -413,20 +418,20 @@ def balance_of(address, token_address, rpc_address):
 
 def approve(token_address, private_key, nonce, gas_price_gwei, tx_timeout_seconds, rpc_address, logger):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
-    account = w3.eth.account.privateKeyToAccount(private_key)
+    account = w3.eth.account.from_key(private_key)
     w3.eth.default_account = account.address
 
-    contract_address = Web3.toChecksumAddress(token_address)
+    contract_address = Web3.to_checksum_address(token_address)
     contract = w3.eth.contract(contract_address, abi=ABI)
 
     tx = contract.functions.approve(account.address, sys.maxsize)
 
     if isinstance(gas_price_gwei, dict):  # dynamic fee
-        tx = tx.buildTransaction(
-            {'maxFeePerGas': w3.toWei(gas_price_gwei['maxFeePerGas'], 'gwei'),
-             'maxPriorityFeePerGas': w3.toWei(gas_price_gwei['maxPriorityFeePerGas'], 'gwei'), 'nonce': nonce})
+        tx = tx.build_transaction(
+            {'maxFeePerGas': w3.to_wei(gas_price_gwei['maxFeePerGas'], 'gwei'),
+             'maxPriorityFeePerGas': w3.to_wei(gas_price_gwei['maxPriorityFeePerGas'], 'gwei'), 'nonce': nonce})
     else:  # legacy
-        tx = tx.buildTransaction({'gasPrice': w3.toWei(gas_price_gwei, 'gwei'), 'nonce': nonce})
+        tx = tx.build_transaction({'gasPrice': w3.to_wei(gas_price_gwei, 'gwei'), 'nonce': nonce})
 
     logger.debug("Signing transaction")
     
@@ -447,20 +452,20 @@ def approve(token_address, private_key, nonce, gas_price_gwei, tx_timeout_second
 
 def transfer(token_address, private_key, nonce, dest_address, amount, gas_price_gwei, tx_timeout_seconds, rpc_address, logger):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
-    account = w3.eth.account.privateKeyToAccount(private_key)
+    account = w3.eth.account.from_key(private_key)
     w3.eth.default_account = account.address
 
-    contract_address = Web3.toChecksumAddress(token_address)
+    contract_address = Web3.to_checksum_address(token_address)
     contract = w3.eth.contract(contract_address, abi=ABI)
 
     tx = contract.functions.transferFrom(account.address, dest_address, amount)
 
     if isinstance(gas_price_gwei, dict):  # dynamic fee
-        tx = tx.buildTransaction(
-            {'maxFeePerGas': w3.toWei(gas_price_gwei['maxFeePerGas'], 'gwei'),
-             'maxPriorityFeePerGas': w3.toWei(gas_price_gwei['maxPriorityFeePerGas'], 'gwei'), 'nonce': nonce})
+        tx = tx.build_transaction(
+            {'maxFeePerGas': w3.to_wei(gas_price_gwei['maxFeePerGas'], 'gwei'),
+             'maxPriorityFeePerGas': w3.to_wei(gas_price_gwei['maxPriorityFeePerGas'], 'gwei'), 'nonce': nonce})
     else:  # legacy
-        tx = tx.buildTransaction({'gasPrice': w3.toWei(gas_price_gwei, 'gwei'), 'nonce': nonce})
+        tx = tx.build_transaction({'gasPrice': w3.to_wei(gas_price_gwei, 'gwei'), 'nonce': nonce})
 
     logger.debug("Signing transaction")
     
